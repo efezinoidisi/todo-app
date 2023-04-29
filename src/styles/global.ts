@@ -15,7 +15,11 @@ export default createGlobalStyle`
     }
     
     body {
-        background : ${({ theme }) => theme.body};
-        color : ${({theme}) => theme.text};
+        background-color :${({ theme }) => theme.colors.body};
+        color : ${({ theme }) => theme.colors.text};
+        height: 100dvh;
+        
+        
+       
     }
 `;

@@ -1,34 +1,66 @@
-import darkImg from "../assets/bg-mobile-dark.jpg";
-import lightImg from '../assets/bg-mobile-light.jpg';
-
-import desktopDarkImg from '../assets/bg-desktop-dark.jpg';
-
-import desktopLightImg from '../assets/bg-desktop-light.jpg';
-import React from 'react';
+// import darkImg from '../assets/bg-mobile-dark.jpg';
+// import lightImg from '../assets/bg-mobile-light.jpg';
+//import { ListContext } from '../ValuesContext';
+// import desktopDarkImg from '../assets/bg-desktop-dark.jpg';
+import { ValuesContext, valuesTypes } from '../ValuesContext';
+// import desktopLightImg from '../assets/bg-desktop-light.jpg';
+import { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { BsSun, BsMoon } from 'react-icons/bs';
-
+import List from './List';
+//import {ValuesContext} from "../ValuesContext"
 interface HomeProps {
 	toggle: (event: React.MouseEvent<HTMLButtonElement>) => void;
-	theme: string;
+	dark: string;
 }
+// type objType = {
+// 	items: [];
+// 	setItems: React.Dispatch<React.SetStateAction<never[]>>;
+// };
 
-const Home = ({ toggle, theme }: HomeProps) => {
+//let id = 0;
+const Home = ({ toggle, dark }: HomeProps) => {
+	const { todos, saveTodo, deleteTodo, updateTodo, clearCompleted, updateList } = useContext(
+		ValuesContext
+	) as valuesTypes;
+	const [todo, setTodo] = useState('');
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+		if (event.key === 'Enter') {
+			saveTodo(todo);
+			setTodo('');
+		}
+	};
 	return (
-		<div>
-			<header>
-				<HeaderStyles
-					url={theme === 'dark' ? darkImg : lightImg}
-					desktop={theme === 'dark' ? desktopDarkImg : desktopLightImg}
-				>
-					<h1>To Do</h1>
-					<ButtonStyles onClick={toggle}>
-						{theme === 'dark' ? <BsSun /> : <BsMoon />}
-					</ButtonStyles>
-				</HeaderStyles>
-				<input type='text' name='add-todo' placeholder='Create a new todo...' />
-			</header>
-		</div>
+		<>
+			<HeaderStyles>
+				<HeaderContents>
+					<FirstStyles>
+						<h1>todo</h1>
+						<ButtonStyles onClick={toggle}>
+							{dark === 'dark' ? <BsSun /> : <BsMoon />}
+						</ButtonStyles>
+					</FirstStyles>
+					<InputStyles
+						type='text'
+						name='add-todo'
+						placeholder='Create a new todo...'
+						onKeyPress={handleKeyDown}
+						value={todo}
+						onChange={e => setTodo(e.target.value)}
+					/>
+				</HeaderContents>
+			</HeaderStyles>
+
+			<MainStyles>
+				<List
+					todos={todos}
+					deleteTodo={deleteTodo}
+					updateTodo={updateTodo}
+					clearCompleted={clearCompleted}
+					updateList={updateList}
+				/>
+			</MainStyles>
+		</>
 	);
 };
 
@@ -37,15 +69,63 @@ export default Home;
 const ButtonStyles = styled.button`
 	background-color: inherit;
 	border: none;
+	font-size: 1.5rem;
+	display: flex;
+	height: fit-content;
+	color: #fff;
 `;
 
-const HeaderStyles = styled.div`
+const FirstStyles = styled.div`
 	display: flex;
 	justify-content: space-between;
-	background-image: ${props => `url(${props.url})`};
-	background-repeat : no-repeat;
+	align-items: center;
+	padding: 0rem 0 2rem;
+	background-repeat: no-repeat;
+	& h1 {
+		color: #fff;
+		text-transform: uppercase;
+		letter-spacing: 5px;
+	}
+`;
+
+const HeaderStyles = styled.header`
+	padding: 3rem 0;
+	width: 100%;
+	background-image: ${({ theme }) => `url(${theme.pictures.mobile})`};
+	background-repeat: no-repeat;
+	background-size: cover;
 
 	@media only screen and (min-width: 900px) {
-		background-image: ${props => `url(${props.desktop})`};
+		background-image: ${({ theme }) => `url(${theme.pictures.desktop})`};
+	}
+`;
+
+const InputStyles = styled.input`
+	background-color: ${({ theme }) => theme.colors.mainBg};
+	border: none;
+	border-radius: 5px;
+	width: 100%;
+	padding: 0.6rem 0.9rem;
+	color: ${({theme}) => theme.colors.text}
+`;
+
+
+const HeaderContents = styled.div`
+	width: 85%;
+	margin: 0 auto;
+
+	@media only screen and (min-width: 600px) {
+		width: 50%;
+	}
+`;
+
+
+const MainStyles = styled.main`
+	width: 85%;
+	margin: -1.5rem auto 1rem;
+	border-radius: 5px;
+
+	@media only screen and (min-width: 600px) {
+		width: 50%;
 	}
 `;
