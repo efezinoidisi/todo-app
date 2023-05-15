@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useEffect, useState, useRef } from 'react';
+import { useDrag, useDrop } from 'react-dnd/dist/hooks';
 import { ListContext } from '../ValuesContext';
 import close from '../assets/icon-cross.svg';
 import Section from './Section';
@@ -10,6 +11,8 @@ type Props = {
 	clearCompleted: () => void;
 	updateList: (todo: ListContext[]) => void;
 };
+
+const type = "List";
 
 const List = ({
 	todos,
@@ -22,9 +25,8 @@ const List = ({
 		textDecoration: 'line-through',
 	};
 	const [items, setItems] = useState(todos);
-
-	const dragItem = useRef<HTMLDivElement>(null);
-	const dragOverItem = useRef<HTMLDivElement>(null);
+	
+	const ref = useRef(null);
 
 	useEffect(() => {
 		setItems(todos);
@@ -42,19 +44,6 @@ const List = ({
 
 		setItems(newList);
 	};
-
-	const dragStart = (e: React.DragEvent<HTMLDivElement>) => {
-		e.dataTransfer.setData('text', e.currentTarget.id);
-	};
-
-	const dragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-		e.preventDefault();
-	};
-
-	const drop = e => {
-		const id = e.dataTransfer.getData('text');
-	};
-
 	return (
 		<>
 			<ListStyles>
@@ -62,10 +51,6 @@ const List = ({
 					<ItemsStyles
 						key={todo.id}
 						style={!todo.isPending ? myStyles : undefined}
-						onDragStart={e => dragStart(e)}
-						onDragOver={e => dragEnter(e)}
-						onDrop={drop}
-						draggable
 					>
 						<input
 							type='checkbox'
