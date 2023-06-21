@@ -1,5 +1,4 @@
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+
 import { ValuesContext, valuesTypes } from '../ValuesContext';
 // import desktopLightImg from '../assets/bg-desktop-light.jpg';
 import { useState, useContext } from 'react';
@@ -29,7 +28,7 @@ const Home = ({ toggle, dark }: HomeProps) => {
 		}
 	};
 	return (
-		<DndProvider backend={HTML5Backend}>
+		<>
 			<HeaderStyles>
 				<HeaderContents>
 					<FirstStyles>
@@ -58,7 +57,7 @@ const Home = ({ toggle, dark }: HomeProps) => {
 					updateList={updateList}
 				/>
 			</MainStyles>
-		</DndProvider>
+		</>
 	);
 };
 

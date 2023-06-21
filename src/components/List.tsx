@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import { useEffect, useState, useRef } from 'react';
-import { useDrag, useDrop } from 'react-dnd/dist/hooks';
+import { useEffect, useState } from 'react';
+import Item from './Item';
 import { ListContext } from '../ValuesContext';
-import close from '../assets/icon-cross.svg';
+
 import Section from './Section';
 type Props = {
 	todos: ListContext[] | [];
@@ -12,62 +12,47 @@ type Props = {
 	updateList: (todo: ListContext[]) => void;
 };
 
-const type = "List";
-
 const List = ({
 	todos,
 	updateTodo,
 	deleteTodo,
-	clearCompleted,
-	updateList,
+	clearCompleted
 }: Props) => {
-	const myStyles: React.CSSProperties = {
-		textDecoration: 'line-through',
-	};
-	const [items, setItems] = useState(todos);
-	
-	const ref = useRef(null);
+	//handle all, completed and active
+	const [query, setQuery] = useState<boolean | null>(null);
 
-	useEffect(() => {
-		setItems(todos);
-	}, [todos]);
+	const filtereditems = todos.filter(todo => todo.isPending === query);
+
 	const views = (action: string) => {
-		let newList;
-		if (action === 'completed') {
-			newList = todos.filter(todo => todo.isPending === false);
-		} else if (action === 'pending') {
-			newList = todos.filter(todo => todo.isPending === true);
-		} else {
-			setItems(todos);
-			return;
-		}
 
-		setItems(newList);
+    if (action === 'completed') {
+      // show all completed items on the list
+			setQuery(false);
+    } else if (action === 'pending') {
+      // show todos not yet completed
+			setQuery(true);
+    } else {
+      // show all todos
+			setQuery(null);
+		}
 	};
+
+	// use the filtered list only when the active or completed button is clicked and query is set (not null)
+	const currentList = query === null ? todos : filtereditems;
 	return (
 		<>
 			<ListStyles>
-				{items.map((todo, index) => (
-					<ItemsStyles
+				{currentList.map(todo => (
+					<Item
+						{...todo}
 						key={todo.id}
-						style={!todo.isPending ? myStyles : undefined}
-					>
-						<input
-							type='checkbox'
-							checked={!todo.isPending}
-							onChange={() => updateTodo(todo.id)}
-						/>
-						<span>{todo.title}</span>
-						<ImageStyles
-							src={close}
-							alt='close todo'
-							onClick={() => deleteTodo(todo.id)}
-						/>
-					</ItemsStyles>
+						updateTodo={updateTodo}
+						deleteTodo={deleteTodo}
+					/>
 				))}
 
 				<LastStyles>
-					<span>{items.length} items left</span>
+					<span>{currentList.length} items left</span>
 					<Section views={views} />
 					<button onClick={clearCompleted} className='button'>
 						Clear completed
@@ -88,20 +73,6 @@ const ListStyles = styled.div`
 	background-color: ${({ theme }) => theme.colors.mainBg};
 	border-radius: 5px;
 	padding: 0.4rem 0.8rem;
-`;
-
-const ItemsStyles = styled.div`
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	padding: 0.5rem 0;
-	gap: 0.5rem;
-	border-bottom: 1px solid ${({ theme }) => theme.colors.blur};
-`;
-
-const ImageStyles = styled.img`
-	margin-left: auto;
-	max-width: 10%;
 `;
 
 const LastStyles = styled.div`

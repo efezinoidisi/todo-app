@@ -1,3 +1,5 @@
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme, darkTheme } from './styles/theme';
 import { useState } from 'react';
@@ -23,14 +25,16 @@ function App() {
 	// };
 	// tslint:disable-next-line
 	return (
-		<ValuesProvider>
-			<ThemeProvider theme={dark === 'dark' ? darkTheme : lightTheme}>
-				<GlobalStyles />
-				<div className='App'>
-					<Home toggle={toggleTheme} dark={dark} />
-				</div>
-			</ThemeProvider>
-		</ValuesProvider>
+		<DndProvider backend={HTML5Backend}>
+			<ValuesProvider>
+				<ThemeProvider theme={dark === 'dark' ? darkTheme : lightTheme}>
+					<GlobalStyles />
+					<div className='App'>
+						<Home toggle={toggleTheme} dark={dark} />
+					</div>
+				</ThemeProvider>
+			</ValuesProvider>
+		</DndProvider>
 	);
 }
 
