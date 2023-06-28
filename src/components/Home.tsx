@@ -41,7 +41,7 @@ const Home = ({ toggle, dark }: HomeProps) => {
 						type='text'
 						name='add-todo'
 						placeholder='Create a new todo...'
-						onKeyPress={handleKeyDown}
+            onKeyDown={handleKeyDown}
 						value={todo}
 						onChange={e => setTodo(e.target.value)}
 					/>

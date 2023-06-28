@@ -25,16 +25,15 @@ function App() {
 	// };
 	// tslint:disable-next-line
 	return (
-		<DndProvider backend={HTML5Backend}>
-			<ValuesProvider>
-				<ThemeProvider theme={dark === 'dark' ? darkTheme : lightTheme}>
-					<GlobalStyles />
-					<div className='App'>
-						<Home toggle={toggleTheme} dark={dark} />
-					</div>
-				</ThemeProvider>
-			</ValuesProvider>
-		</DndProvider>
+		//
+		<ValuesProvider>
+			<ThemeProvider theme={dark === 'dark' ? darkTheme : lightTheme}>
+				<GlobalStyles />
+				<div className='App'>
+					<Home toggle={toggleTheme} dark={dark} />
+				</div>
+			</ThemeProvider>
+		</ValuesProvider>
 	);
 }
 

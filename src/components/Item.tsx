@@ -1,44 +1,60 @@
-import { useDrag } from 'react-dnd/dist';
+//import { useDrag } from 'react-dnd/dist';
+import { Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import close from '../assets/icon-cross.svg';
-const type = 'List';
+//const type = 'List';
 
 type itemProps = {
-	id: number;
+	id: string;
 	isPending: boolean;
 	title: string;
-	updateTodo: (id: number) => void;
-	deleteTodo: (id: number) => void;
+	index: number;
+	updateTodo: (id: string) => void;
+	deleteTodo: (id: string) => void;
 };
 
-const Item = ({ id, isPending, title, updateTodo, deleteTodo }: itemProps) => {
+const Item = ({
+	id,
+	index,
+	isPending,
+	title,
+	updateTodo,
+	deleteTodo,
+}: itemProps) => {
 	const myStyles: React.CSSProperties = {
 		textDecoration: 'line-through',
 	};
 
-	const [{ isDragging }, drag] = useDrag(() => ({
-		type: type,
-		collect: monitor => ({
-			isDragging: !!monitor.isDragging(),
-		}),
-	}));
-
-	//console.log(isDragging);
+	// const [{ isDragging }, drag] = useDrag(() => ({
+	// 	type: type,
+	// 	collect: monitor => ({
+	// 		isDragging: !!monitor.isDragging(),
+	// 	}),
+	// }));
 
 	return (
-		<ItemsStyles ref={drag} style={!isPending ? myStyles : undefined}>
-			<input
-				type='checkbox'
-				checked={!isPending}
-				onChange={() => updateTodo(id)}
-			/>
-			<span>{title}</span>
-			<ImageStyles
-				src={close}
-				alt='close todo'
-				onClick={() => deleteTodo(id)}
-			/>
-		</ItemsStyles>
+		<Draggable draggableId={id} index={index}>
+			{provided => (
+				<ItemsStyles
+					{...provided.draggableProps}
+					{...provided.dragHandleProps}
+					ref={provided.innerRef}
+					style={!isPending ? myStyles : undefined}
+				>
+					<input
+						type='checkbox'
+						checked={!isPending}
+						onChange={() => updateTodo(id)}
+					/>
+					<span>{title}</span>
+					<ImageStyles
+						src={close}
+						alt='close todo'
+						onClick={() => deleteTodo(id)}
+					/>
+				</ItemsStyles>
+			)}
+		</Draggable>
 	);
 };
 

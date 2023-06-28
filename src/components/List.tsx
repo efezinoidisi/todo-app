@@ -1,68 +1,86 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Item from './Item';
 import { ListContext } from '../ValuesContext';
-
+import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
 import Section from './Section';
+
 type Props = {
 	todos: ListContext[] | [];
-	updateTodo: (id: number) => void;
-	deleteTodo: (id: number) => void;
+	updateTodo: (id: string) => void;
+	deleteTodo: (id: string) => void;
 	clearCompleted: () => void;
 	updateList: (todo: ListContext[]) => void;
 };
 
-const List = ({
-	todos,
-	updateTodo,
-	deleteTodo,
-	clearCompleted
-}: Props) => {
+const List = ({ todos, updateTodo, deleteTodo, clearCompleted }: Props) => {
 	//handle all, completed and active
 	const [query, setQuery] = useState<boolean | null>(null);
 
 	const filtereditems = todos.filter(todo => todo.isPending === query);
 
 	const views = (action: string) => {
-
-    if (action === 'completed') {
-      // show all completed items on the list
+		if (action === 'completed') {
+			// show all completed items on the list
 			setQuery(false);
-    } else if (action === 'pending') {
-      // show todos not yet completed
+		} else if (action === 'pending') {
+			// show todos not yet completed
 			setQuery(true);
-    } else {
-      // show all todos
+		} else {
+			// show all todos
 			setQuery(null);
 		}
 	};
 
 	// use the filtered list only when the active or completed button is clicked and query is set (not null)
 	const currentList = query === null ? todos : filtereditems;
-	return (
-		<>
-			<ListStyles>
-				{currentList.map(todo => (
-					<Item
-						{...todo}
-						key={todo.id}
-						updateTodo={updateTodo}
-						deleteTodo={deleteTodo}
-					/>
-				))}
 
-				<LastStyles>
-					<span>{currentList.length} items left</span>
-					<Section views={views} />
-					<button onClick={clearCompleted} className='button'>
-						Clear completed
-					</button>
-				</LastStyles>
-			</ListStyles>
+	// handle drag
+	const handleOnDragEnd = (results: DropResult) => {
+		console.log(results);
+		const { source, destination } = results;
+
+		if (!destination) return;
+		if (
+			destination.droppableId === source.droppableId &&
+			source.index === destination.index
+		)
+			return;
+		const reorderedList = [...currentList];
+		const [removedList] = reorderedList.splice(source.index);
+
+		reorderedList.splice(destination.index, 0, removedList);
+		console.log(reorderedList);
+	};
+	return (
+		<DragDropContext onDragEnd={handleOnDragEnd}>
+			<Droppable droppableId='todos' type='group'>
+				{provided => (
+					<ListStyles {...provided.droppableProps} ref={provided.innerRef}>
+						{currentList.map((todo, index) => (
+							<Item
+								{...todo}
+								key={todo.id}
+								index={index}
+								updateTodo={updateTodo}
+								deleteTodo={deleteTodo}
+							/>
+						))}
+
+						<LastStyles>
+							<span>{currentList.length} items left</span>
+							<Section views={views} />
+							<button onClick={clearCompleted} className='button'>
+								Clear completed
+							</button>
+						</LastStyles>
+					</ListStyles>
+				)}
+			</Droppable>
 			<DisplayStyles>
 				<Section views={views} />
 			</DisplayStyles>
-		</>
+		</DragDropContext>
 	);
 };
 

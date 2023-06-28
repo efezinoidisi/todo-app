@@ -1,6 +1,6 @@
 import { useState, createContext } from 'react';
 export type ListContext = {
-	id: number;
+	id: string;
 	title: string;
 	isPending: boolean;
 };
@@ -12,8 +12,8 @@ type ValuesPType = {
 export type valuesTypes = {
 	todos: ListContext[] | [];
 	saveTodo: (todo: string) => void;
-	updateTodo: (id: number) => void;
-	deleteTodo: (id: number) => void;
+	updateTodo: (id: string) => void;
+	deleteTodo: (id: string) => void;
 	clearCompleted: () => void;
 	updateList: (todo: ListContext[]) => void;
 };
@@ -29,15 +29,16 @@ export const ValuesProvider = ({ children }: ValuesPType) => {
 
 	const saveTodo = (todo: string) => {
 		const newTodo: ListContext = {
-			id: Math.random(),
+			id: `${Math.random()}`,
 			title: todo,
 			isPending: true,
 		};
+		console.log(newTodo);
 		setTodos(prev => [...prev, newTodo]);
 		localStorage.setItem('todos', JSON.stringify([...todos, newTodo]));
 	};
 
-	const updateTodo = (id: number) => {
+	const updateTodo = (id: string) => {
 		todos.filter((todo: ListContext) => {
 			if (todo.id === id) {
 				todo.isPending = !todo.isPending;
@@ -47,7 +48,7 @@ export const ValuesProvider = ({ children }: ValuesPType) => {
 	};
 
 	// delete a todo from the list using its id
-	const deleteTodo = (id: number) => {
+	const deleteTodo = (id: string) => {
 		const newList = todos.filter((todo: ListContext) => todo.id !== id);
 		setTodos(newList);
 		localStorage.setItem('todos', JSON.stringify(newList));
