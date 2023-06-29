@@ -1,11 +1,10 @@
-
-import { ValuesContext, valuesTypes } from '../ValuesContext';
-// import desktopLightImg from '../assets/bg-desktop-light.jpg';
+import { TodosContext } from '../TodoContext';
+import { TodoContextType } from '../todoTypes';
 import { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { BsSun, BsMoon } from 'react-icons/bs';
 import List from './List';
-//import {ValuesContext} from "../ValuesContext"
+//import {TodosContext} from "../TodosContext"
 interface HomeProps {
 	toggle: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	dark: string;
@@ -17,9 +16,8 @@ interface HomeProps {
 
 //let id = 0;
 const Home = ({ toggle, dark }: HomeProps) => {
-	const { todos, saveTodo, deleteTodo, updateTodo, clearCompleted, updateList } = useContext(
-		ValuesContext
-	) as valuesTypes;
+	const { todos, saveTodo, deleteTodo, updateTodo, clearCompleted } =
+		useContext(TodosContext) as TodoContextType;
 	const [todo, setTodo] = useState('');
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === 'Enter') {
@@ -41,7 +39,7 @@ const Home = ({ toggle, dark }: HomeProps) => {
 						type='text'
 						name='add-todo'
 						placeholder='Create a new todo...'
-            onKeyDown={handleKeyDown}
+						onKeyDown={handleKeyDown}
 						value={todo}
 						onChange={e => setTodo(e.target.value)}
 					/>
@@ -54,7 +52,6 @@ const Home = ({ toggle, dark }: HomeProps) => {
 					deleteTodo={deleteTodo}
 					updateTodo={updateTodo}
 					clearCompleted={clearCompleted}
-					updateList={updateList}
 				/>
 			</MainStyles>
 		</>
@@ -103,9 +100,8 @@ const InputStyles = styled.input`
 	border-radius: 5px;
 	width: 100%;
 	padding: 0.6rem 0.9rem;
-	color: ${({theme}) => theme.colors.text}
+	color: ${({ theme }) => theme.colors.text};
 `;
-
 
 const HeaderContents = styled.div`
 	width: 85%;
@@ -115,7 +111,6 @@ const HeaderContents = styled.div`
 		width: 50%;
 	}
 `;
-
 
 const MainStyles = styled.main`
 	width: 85%;

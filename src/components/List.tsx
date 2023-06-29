@@ -1,23 +1,28 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import Item from './Item';
-import { ListContext } from '../ValuesContext';
-import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd';
+import { TodoType } from '../todoTypes';
+import {
+	DragDropContext,
+	DropResult,
+	Droppable,
+	Draggable,
+} from 'react-beautiful-dnd';
 import Section from './Section';
 
 type Props = {
-	todos: ListContext[] | [];
+	todos: TodoType[] | [];
 	updateTodo: (id: string) => void;
 	deleteTodo: (id: string) => void;
 	clearCompleted: () => void;
-	updateList: (todo: ListContext[]) => void;
+	//updateList: (todo: TodoType[]) => void;
 };
 
 const List = ({ todos, updateTodo, deleteTodo, clearCompleted }: Props) => {
 	//handle all, completed and active
 	const [query, setQuery] = useState<boolean | null>(null);
 
-	const filtereditems = todos.filter(todo => todo.isPending === query);
+	const filtereditems = todos.filter(todo => todo.pending === query);
 
 	const views = (action: string) => {
 		if (action === 'completed') {
@@ -58,15 +63,23 @@ const List = ({ todos, updateTodo, deleteTodo, clearCompleted }: Props) => {
 				{provided => (
 					<ListStyles {...provided.droppableProps} ref={provided.innerRef}>
 						{currentList.map((todo, index) => (
-							<Item
-								{...todo}
-								key={todo.id}
-								index={index}
-								updateTodo={updateTodo}
-								deleteTodo={deleteTodo}
-							/>
+							<Draggable key={todo.id} draggableId={todo.id} index={index}>
+								{provided => (
+									<div
+										{...provided.draggableProps}
+										{...provided.dragHandleProps}
+										ref={provided.innerRef}
+									>
+										<Item
+											{...todo}
+											updateTodo={updateTodo}
+											deleteTodo={deleteTodo}
+										/>
+									</div>
+								)}
+							</Draggable>
 						))}
-
+						{provided.placeholder}
 						<LastStyles>
 							<span>{currentList.length} items left</span>
 							<Section views={views} />

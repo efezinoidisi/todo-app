@@ -1,66 +1,39 @@
-//import { useDrag } from 'react-dnd/dist';
-import { Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import close from '../assets/icon-cross.svg';
 //const type = 'List';
 
 type itemProps = {
 	id: string;
-	isPending: boolean;
+	pending: boolean;
 	title: string;
-	index: number;
 	updateTodo: (id: string) => void;
 	deleteTodo: (id: string) => void;
 };
 
-const Item = ({
-	id,
-	index,
-	isPending,
-	title,
-	updateTodo,
-	deleteTodo,
-}: itemProps) => {
-	const myStyles: React.CSSProperties = {
-		textDecoration: 'line-through',
-	};
-
-	// const [{ isDragging }, drag] = useDrag(() => ({
-	// 	type: type,
-	// 	collect: monitor => ({
-	// 		isDragging: !!monitor.isDragging(),
-	// 	}),
-	// }));
-
+const Item = ({ id, pending, title, updateTodo, deleteTodo }: itemProps) => {
 	return (
-		<Draggable draggableId={id} index={index}>
-			{provided => (
-				<ItemsStyles
-					{...provided.draggableProps}
-					{...provided.dragHandleProps}
-					ref={provided.innerRef}
-					style={!isPending ? myStyles : undefined}
-				>
-					<input
-						type='checkbox'
-						checked={!isPending}
-						onChange={() => updateTodo(id)}
-					/>
-					<span>{title}</span>
-					<ImageStyles
-						src={close}
-						alt='close todo'
-						onClick={() => deleteTodo(id)}
-					/>
-				</ItemsStyles>
-			)}
-		</Draggable>
+		<ItemsStyles pending={pending}>
+			<input
+				type='checkbox'
+				checked={!pending}
+				onChange={() => updateTodo(id)}
+				aria-label='mark todo as completed'
+			/>
+			<span aria-label='todo item'>{title}</span>
+			<ImageStyles
+				src={close}
+				alt='close icon for deleting a todo item'
+				onClick={() => deleteTodo(id)}
+				aria-label='delete todo item'
+				role='button'
+			/>
+		</ItemsStyles>
 	);
 };
 
 export default Item;
 
-const ItemsStyles = styled.div`
+const ItemsStyles = styled.div.attrs((props: { pending: boolean }) => props)`
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
@@ -68,6 +41,7 @@ const ItemsStyles = styled.div`
 	gap: 0.5rem;
 	border-bottom: 1px solid ${({ theme }) => theme.colors.blur};
 	cursor: pointer;
+	text-decoration: ${({ pending }) => (pending ? 'none' : 'line-through')};
 `;
 
 const ImageStyles = styled.img`
