@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, MutableRefObject } from 'react';
 import Item from './Item';
 import { TodoContextType } from '../todoTypes';
 import {
@@ -11,7 +11,11 @@ import {
 import Section from './Section';
 import { useTodo } from '../useTodo';
 
-const List = () => {
+type ListProps = {
+	inputRef: MutableRefObject<HTMLInputElement>;
+};
+
+const List = ({ inputRef }: ListProps) => {
 	const { todos, deleteTodo, updateTodo, clearCompleted, updateTodoList } =
 		useTodo() as TodoContextType;
 	//
@@ -55,43 +59,59 @@ const List = () => {
 		reorderedList.splice(destination.index, 0, removedTodo);
 		updateTodoList(reorderedList);
 	};
+
+	if (todos.length === 0)
+		return (
+			<EmptyList>
+				<p>Nothing to do yet...</p>
+				<button type='button' onClick={() => inputRef.current.focus()}>
+					click to add todo
+				</button>
+			</EmptyList>
+		);
+
 	return (
-		<DragDropContext onDragEnd={handleOnDragEnd}>
-			<Droppable droppableId='todos' type='group'>
-				{provided => (
-					<ListStyles {...provided.droppableProps} ref={provided.innerRef}>
-						{filtereditems.map((todo, index) => (
-							<Draggable key={todo.id} draggableId={todo.id} index={index}>
-								{provided => (
-									<ItemWrap
-										{...provided.draggableProps}
-										{...provided.dragHandleProps}
-										ref={provided.innerRef}
-									>
-										<Item
-											{...todo}
-											updateTodo={updateTodo}
-											deleteTodo={deleteTodo}
-										/>
-									</ItemWrap>
-								)}
-							</Draggable>
-						))}
-						{provided.placeholder}
-						<LastStyles>
-							<span>{`${itemsLeft} item${itemsLeft > 1 ? 's' : ''} left`}</span>
-							<Section views={setQuery} query={query} />
-							<button onClick={clearCompleted} className='button'>
-								Clear completed
-							</button>
-						</LastStyles>
-					</ListStyles>
-				)}
-			</Droppable>
+		<>
+			<DragDropContext onDragEnd={handleOnDragEnd}>
+				<Droppable droppableId='todos' type='group'>
+					{provided => (
+						<ListStyles {...provided.droppableProps} ref={provided.innerRef}>
+							{filtereditems.map((todo, index) => (
+								<Draggable key={todo.id} draggableId={todo.id} index={index}>
+									{provided => (
+										<ItemWrap
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}
+											ref={provided.innerRef}
+										>
+											<Item
+												{...todo}
+												updateTodo={updateTodo}
+												deleteTodo={deleteTodo}
+											/>
+										</ItemWrap>
+									)}
+								</Draggable>
+							))}
+							{provided.placeholder}
+
+							<LastStyles>
+								<span>{`${itemsLeft} item${
+									itemsLeft > 1 ? 's' : ''
+								} left`}</span>
+								<Section views={setQuery} query={query} />
+								<button onClick={clearCompleted} className='button'>
+									Clear completed
+								</button>
+							</LastStyles>
+						</ListStyles>
+					)}
+				</Droppable>
+			</DragDropContext>
 			<DisplayStyles>
 				<Section views={setQuery} query={query} />
 			</DisplayStyles>
-		</DragDropContext>
+		</>
 	);
 };
 
@@ -107,8 +127,9 @@ const LastStyles = styled.div`
 	display: flex;
 	justify-content: space-between;
 	padding: 0 1rem;
-	height: 3rem;
+	height: 3.2rem;
 	align-items: center;
+	color: ${({ theme }) => theme.colors.blur};
 
 	button {
 		background-color: inherit;
@@ -116,7 +137,7 @@ const LastStyles = styled.div`
 	}
 
 	.button {
-		color: ${({ theme }) => theme.colors.text};
+		color: ${({ theme }) => theme.colors.blur};
 	}
 
 	div {
@@ -134,12 +155,13 @@ const DisplayStyles = styled.div`
 	width: 100%;
 
 	margin-top: 2rem;
-	border-radius: 5px;
+	border-radius: 8px;
 	background-color: ${({ theme }) => theme.colors.mainBg};
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	padding: 0.5rem 0;
+	height: 3.2rem;
 
 	@media screen and (min-width: 900px) {
 		display: none;
@@ -149,4 +171,23 @@ const DisplayStyles = styled.div`
 const ItemWrap = styled.div`
 	padding: 0 1rem;
 	border-bottom: 1px solid ${({ theme }) => theme.colors.blur};
+`;
+
+const EmptyList = styled.div`
+	background-color: ${({ theme }) => theme.colors.mainBg};
+	width: 100%;
+	border-radius: 8px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding-block: 1rem;
+	gap: 0.4rem;
+
+	button {
+		background-color: ${({ theme }) => theme.colors.background};
+		padding: 0.6rem 0.5rem;
+		border-radius: 1rem;
+		border: 0;
+	}
 `;

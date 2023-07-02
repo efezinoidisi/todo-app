@@ -1,9 +1,10 @@
 import { TodoContextType } from '../todoTypes';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { BsSun, BsMoon } from 'react-icons/bs';
 import List from './List';
 import { useTodo } from '../useTodo';
+import { MutableRefObject } from 'react';
 
 type HomeProps = {
 	toggle: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -12,6 +13,8 @@ type HomeProps = {
 
 const Home = ({ toggle, dark }: HomeProps) => {
 	const { saveTodo } = useTodo() as TodoContextType;
+
+	const inputRef = useRef() as MutableRefObject<HTMLInputElement>;
 
 	// new todo from input
 	const [todo, setTodo] = useState('');
@@ -41,13 +44,15 @@ const Home = ({ toggle, dark }: HomeProps) => {
 							placeholder='Create a new todo...'
 							value={todo}
 							onChange={e => setTodo(e.target.value)}
+							ref={inputRef}
 						/>
 					</FormStyle>
 				</HeaderContents>
 			</HeaderStyles>
 
 			<MainStyles>
-				<List />
+				<List inputRef={inputRef} />
+				<p className='drag'>Drag and drop to reorder list</p>
 			</MainStyles>
 		</>
 	);
@@ -120,6 +125,12 @@ const MainStyles = styled.main`
 	width: 85%;
 	margin: -1.5rem auto 1rem;
 	border-radius: 5px;
+
+	.drag {
+		padding-block: 3rem;
+		text-align: center;
+		color: ${({ theme }) => theme.colors.blur};
+	}
 
 	@media only screen and (min-width: 600px) {
 		width: 50%;

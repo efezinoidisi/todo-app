@@ -41,7 +41,7 @@ const ItemsStyles = styled.div.attrs((props: { pending: boolean }) => props)`
 	justify-content: flex-start;
 	align-items: center;
 	padding: 0;
-	height: 3rem;
+	height: 3.2rem;
 	gap: 1rem;
 	font-size: 1rem;
 

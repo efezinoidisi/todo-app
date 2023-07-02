@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-//import { useState } from 'react';
+
 type SectionProps = {
 	views: (action: string) => void;
 	query: string;
@@ -10,32 +10,20 @@ type Props = {
 };
 
 const Section = ({ views, query }: SectionProps) => {
+	const allViews = ['all', 'active', 'completed'];
 	return (
 		<DivStyles active={query}>
-			<button
-				onClick={() => {
-					views('all');
-				}}
-				className='all'
-			>
-				all
-			</button>
-			<button
-				onClick={() => {
-					views('pending');
-				}}
-				className='pending'
-			>
-				active
-			</button>
-			<button
-				onClick={() => {
-					views('completed');
-				}}
-				className='completed'
-			>
-				completed
-			</button>
+			{allViews.map(item => (
+				<button
+					key={item}
+					onClick={() => {
+						views(item);
+					}}
+					className={item}
+				>
+					{item}
+				</button>
+			))}
 		</DivStyles>
 	);
 };

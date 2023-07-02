@@ -18,8 +18,10 @@ export default createGlobalStyle`
         background-color :${({ theme }) => theme.colors.body};
         color : ${({ theme }) => theme.colors.text};
         height: 100dvh;
-        
-        
-       
+        padding-bottom: 3rem;
+    }
+    
+    button{
+      cursor: pointer;
     }
 `;
