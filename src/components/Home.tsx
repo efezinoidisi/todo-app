@@ -1,30 +1,28 @@
-import { TodosContext } from '../TodoContext';
 import { TodoContextType } from '../todoTypes';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { BsSun, BsMoon } from 'react-icons/bs';
 import List from './List';
-//import {TodosContext} from "../TodosContext"
-interface HomeProps {
+import { useTodo } from '../useTodo';
+
+type HomeProps = {
 	toggle: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	dark: string;
-}
-// type objType = {
-// 	items: [];
-// 	setItems: React.Dispatch<React.SetStateAction<never[]>>;
-// };
+};
 
-//let id = 0;
 const Home = ({ toggle, dark }: HomeProps) => {
-	const { todos, saveTodo, deleteTodo, updateTodo, clearCompleted } =
-		useContext(TodosContext) as TodoContextType;
+	const { saveTodo } = useTodo() as TodoContextType;
+
+	// new todo from input
 	const [todo, setTodo] = useState('');
-	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-		if (event.key === 'Enter') {
-			saveTodo(todo);
-			setTodo('');
-		}
+
+	// Add input from user to todo list
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		saveTodo(todo);
+		setTodo('');
 	};
+
 	return (
 		<>
 			<HeaderStyles>
@@ -35,24 +33,21 @@ const Home = ({ toggle, dark }: HomeProps) => {
 							{dark === 'dark' ? <BsSun /> : <BsMoon />}
 						</ButtonStyles>
 					</FirstStyles>
-					<InputStyles
-						type='text'
-						name='add-todo'
-						placeholder='Create a new todo...'
-						onKeyDown={handleKeyDown}
-						value={todo}
-						onChange={e => setTodo(e.target.value)}
-					/>
+					<FormStyle onSubmit={handleSubmit}>
+						<span></span>
+						<InputStyles
+							type='text'
+							name='add-todo'
+							placeholder='Create a new todo...'
+							value={todo}
+							onChange={e => setTodo(e.target.value)}
+						/>
+					</FormStyle>
 				</HeaderContents>
 			</HeaderStyles>
 
 			<MainStyles>
-				<List
-					todos={todos}
-					deleteTodo={deleteTodo}
-					updateTodo={updateTodo}
-					clearCompleted={clearCompleted}
-				/>
+				<List />
 			</MainStyles>
 		</>
 	);
@@ -95,20 +90,29 @@ const HeaderStyles = styled.header`
 `;
 
 const InputStyles = styled.input`
-	background-color: ${({ theme }) => theme.colors.mainBg};
-	border: none;
-	border-radius: 5px;
+	background-color: inherit;
+	border: 0;
 	width: 100%;
-	padding: 0.6rem 0.9rem;
+	height: 100%;
+	padding-left: 0.9rem;
 	color: ${({ theme }) => theme.colors.text};
+	font-size: 1rem;
+
+	&:focus {
+		outline: none;
+	}
 `;
 
 const HeaderContents = styled.div`
 	width: 85%;
 	margin: 0 auto;
 
-	@media only screen and (min-width: 600px) {
+	@media (min-width: 600px) {
 		width: 50%;
+	}
+
+	@media (min-width: 900px) {
+		width: 40%;
 	}
 `;
 
@@ -119,5 +123,26 @@ const MainStyles = styled.main`
 
 	@media only screen and (min-width: 600px) {
 		width: 50%;
+	}
+
+	@media (min-width: 900px) {
+		width: 40%;
+	}
+`;
+
+const FormStyle = styled.form`
+	border: 0;
+	display: flex;
+	background-color: ${({ theme }) => theme.colors.mainBg};
+	border-radius: 8px;
+	align-items: center;
+	height: 3rem;
+	padding-inline: 0.9rem;
+
+	span {
+		border: 1px solid ${({ theme }) => theme.colors.blur};
+		border-radius: 50%;
+		width: 1.25rem;
+		height: 1.25rem;
 	}
 `;

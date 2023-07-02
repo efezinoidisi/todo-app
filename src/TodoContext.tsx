@@ -1,6 +1,7 @@
 import { useState, createContext } from 'react';
 import { TodoContextType, TodoType } from './todoTypes';
 
+// React children type prop
 type RType = {
 	children: React.ReactNode;
 };
@@ -15,6 +16,7 @@ export const TodosContext = createContext<TodoContextType | []>([]);
 export const TodosProvider = ({ children }: RType) => {
 	const [todos, setTodos] = useState<TodoType[] | []>(localTodos);
 
+	// create a new todo item
 	const saveTodo = (todo: string) => {
 		const date = new Date();
 		const newTodo: TodoType = {
@@ -26,6 +28,7 @@ export const TodosProvider = ({ children }: RType) => {
 		localStorage.setItem('todos', JSON.stringify([...todos, newTodo]));
 	};
 
+	// change status of todo (completed | pending) based on the checkbox
 	const updateTodo = (id: string) => {
 		const updatedTodos = todos.map((todo: TodoType) => {
 			if (todo.id === id) {
@@ -40,7 +43,7 @@ export const TodosProvider = ({ children }: RType) => {
 	// delete a todo from the list using its id
 	const deleteTodo = (id: string) => {
 		const newList = todos.filter((todo: TodoType) => todo.id !== id);
-		setTodos(newList);
+		setTodos(prev => prev.filter(todo => todo.id !== id));
 		localStorage.setItem('todos', JSON.stringify(newList));
 	};
 
@@ -51,10 +54,9 @@ export const TodosProvider = ({ children }: RType) => {
 		localStorage.setItem('todos', JSON.stringify(newList));
 	};
 
-	// ??
-	// const updateList = (todo: TodoType[]) => {
-	// 	setTodos(todo);
-	// };
+	const updateTodoList = (todos: TodoType[]) => {
+		setTodos(todos);
+	};
 
 	return (
 		<TodosContext.Provider
@@ -64,11 +66,10 @@ export const TodosProvider = ({ children }: RType) => {
 				updateTodo,
 				deleteTodo,
 				clearCompleted,
+				updateTodoList,
 			}}
 		>
 			{children}
 		</TodosContext.Provider>
 	);
 };
-
-// export const useValues = () => useContext(TodosContext);

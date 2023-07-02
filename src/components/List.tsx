@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Item from './Item';
-import { TodoType } from '../todoTypes';
+import { TodoContextType } from '../todoTypes';
 import {
 	DragDropContext,
 	DropResult,
@@ -9,63 +9,61 @@ import {
 	Draggable,
 } from 'react-beautiful-dnd';
 import Section from './Section';
+import { useTodo } from '../useTodo';
 
-type Props = {
-	todos: TodoType[] | [];
-	updateTodo: (id: string) => void;
-	deleteTodo: (id: string) => void;
-	clearCompleted: () => void;
-	//updateList: (todo: TodoType[]) => void;
-};
+const List = () => {
+	const { todos, deleteTodo, updateTodo, clearCompleted, updateTodoList } =
+		useTodo() as TodoContextType;
+	//
+	const [query, setQuery] = useState<string>('all');
 
-const List = ({ todos, updateTodo, deleteTodo, clearCompleted }: Props) => {
-	//handle all, completed and active
-	const [query, setQuery] = useState<boolean | null>(null);
+	const filtereditems = useMemo(() => {
+		return todos.filter(todo => {
+			switch (query) {
+				case 'pending':
+					return todo.pending;
+				case 'completed':
+					return !todo.pending;
+				default:
+					return todo;
+			}
+		});
+	}, [query, todos]);
 
-	const filtereditems = todos.filter(todo => todo.pending === query);
+	// get number of todos still pending
+	const itemsLeft = todos.filter(todo => todo.pending).length;
 
-	const views = (action: string) => {
-		if (action === 'completed') {
-			// show all completed items on the list
-			setQuery(false);
-		} else if (action === 'pending') {
-			// show todos not yet completed
-			setQuery(true);
-		} else {
-			// show all todos
-			setQuery(null);
-		}
-	};
-
-	// use the filtered list only when the active or completed button is clicked and query is set (not null)
-	const currentList = query === null ? todos : filtereditems;
-
-	// handle drag
+	// handle reordering of todo list on drag and drop
 	const handleOnDragEnd = (results: DropResult) => {
-		console.log(results);
 		const { source, destination } = results;
 
+		// when todo item position is not changed on the list do nothing
 		if (!destination) return;
 		if (
 			destination.droppableId === source.droppableId &&
 			source.index === destination.index
 		)
 			return;
-		const reorderedList = [...currentList];
-		const [removedList] = reorderedList.splice(source.index);
 
-		reorderedList.splice(destination.index, 0, removedList);
-		console.log(reorderedList);
+		// reorder todo list
+
+		const reorderedList = [...filtereditems]; // copy current todo list
+
+		// select the item being dragged
+		const [removedTodo] = reorderedList.splice(source.index, 1);
+
+		reorderedList.splice(destination.index, 0, removedTodo);
+		updateTodoList(reorderedList);
 	};
 	return (
 		<DragDropContext onDragEnd={handleOnDragEnd}>
 			<Droppable droppableId='todos' type='group'>
 				{provided => (
 					<ListStyles {...provided.droppableProps} ref={provided.innerRef}>
-						{currentList.map((todo, index) => (
+						{filtereditems.map((todo, index) => (
 							<Draggable key={todo.id} draggableId={todo.id} index={index}>
 								{provided => (
-									<div
+									<ItemWrap
 										{...provided.draggableProps}
 										{...provided.dragHandleProps}
 										ref={provided.innerRef}
@@ -75,14 +73,14 @@ const List = ({ todos, updateTodo, deleteTodo, clearCompleted }: Props) => {
 											updateTodo={updateTodo}
 											deleteTodo={deleteTodo}
 										/>
-									</div>
+									</ItemWrap>
 								)}
 							</Draggable>
 						))}
 						{provided.placeholder}
 						<LastStyles>
-							<span>{currentList.length} items left</span>
-							<Section views={views} />
+							<span>{`${itemsLeft} item${itemsLeft > 1 ? 's' : ''} left`}</span>
+							<Section views={setQuery} query={query} />
 							<button onClick={clearCompleted} className='button'>
 								Clear completed
 							</button>
@@ -91,7 +89,7 @@ const List = ({ todos, updateTodo, deleteTodo, clearCompleted }: Props) => {
 				)}
 			</Droppable>
 			<DisplayStyles>
-				<Section views={views} />
+				<Section views={setQuery} query={query} />
 			</DisplayStyles>
 		</DragDropContext>
 	);
@@ -102,14 +100,15 @@ export default List;
 const ListStyles = styled.div`
 	width: 100%;
 	background-color: ${({ theme }) => theme.colors.mainBg};
-	border-radius: 5px;
-	padding: 0.4rem 0.8rem;
+	border-radius: 0.5rem;
 `;
 
 const LastStyles = styled.div`
 	display: flex;
 	justify-content: space-between;
-	padding: 0.7rem 0 0.5rem;
+	padding: 0 1rem;
+	height: 3rem;
+	align-items: center;
 
 	button {
 		background-color: inherit;
@@ -145,4 +144,9 @@ const DisplayStyles = styled.div`
 	@media screen and (min-width: 900px) {
 		display: none;
 	}
+`;
+
+const ItemWrap = styled.div`
+	padding: 0 1rem;
+	border-bottom: 1px solid ${({ theme }) => theme.colors.blur};
 `;

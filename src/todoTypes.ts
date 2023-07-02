@@ -10,5 +10,5 @@ export type TodoContextType = {
 	updateTodo: (id: string) => void;
 	deleteTodo: (id: string) => void;
 	clearCompleted: () => void;
-	//updateList: (todo: TodoType[]) => void;
+	updateTodoList: (todos: TodoType[]) => void;
 };

@@ -1,21 +1,20 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+//import { useState } from 'react';
 type SectionProps = {
 	views: (action: string) => void;
+	query: string;
 };
 
 type Props = {
-    active: string;
-}
+	active: string;
+};
 
-const Section = ({ views }: SectionProps) => {
-	const [active, setActive] = useState('all');
+const Section = ({ views, query }: SectionProps) => {
 	return (
-		<DivStyles active={active}>
+		<DivStyles active={query}>
 			<button
 				onClick={() => {
-					setActive('all');
-					views('');
+					views('all');
 				}}
 				className='all'
 			>
@@ -23,7 +22,6 @@ const Section = ({ views }: SectionProps) => {
 			</button>
 			<button
 				onClick={() => {
-					setActive('pending');
 					views('pending');
 				}}
 				className='pending'
@@ -32,7 +30,6 @@ const Section = ({ views }: SectionProps) => {
 			</button>
 			<button
 				onClick={() => {
-					setActive('completed');
 					views('completed');
 				}}
 				className='completed'
@@ -55,17 +52,16 @@ const DivStyles = styled.div<Props>`
 		background-color: inherit;
 		border: none;
 		color: ${({ theme }) => theme.colors.blur};
-        text-transform: capitalize;
+		text-transform: capitalize;
 	}
 
 	.${props => props.active} {
 		color: hsl(220, 98%, 61%);
 	}
-    
-    @media (min-width:900px){
-        width:30%;
-        margin: 0;
-        align-items: center;
-        
-    }
+
+	@media (min-width: 900px) {
+		width: 39%;
+		margin: 0;
+		align-items: center;
+	}
 `;

@@ -3,24 +3,25 @@ import lightImg from '../assets/bg-mobile-light.jpg';
 import desktopDarkImg from '../assets/bg-desktop-dark.jpg';
 
 import desktopLightImg from '../assets/bg-desktop-light.jpg';
-import { DefaultTheme } from 'styled-components';
+//import { DefaultTheme } from 'styled-components';
 
 interface Theme {
 	colors: {
 		body: string;
-		mainBg:string;
+		mainBg: string;
 		text: string;
 		border: string;
 		background: string;
 		blur: string;
-	},
-	pictures :{
+		faint: string;
+	};
+	pictures: {
 		mobile: string;
 		desktop: string;
-	}
+	};
 }
 
-export const lightTheme: DefaultTheme = {
+export const lightTheme: Theme = {
 	colors: {
 		body: ' hsl(236, 33%, 92%)',
 		mainBg: 'hsl(0,0%,98%)',
@@ -28,12 +29,12 @@ export const lightTheme: DefaultTheme = {
 		border: '#fff',
 		background: 'green',
 		blur: 'hsl(235, 19%, 35%)',
+		faint: '',
 	},
 	pictures: {
 		mobile: lightImg,
 		desktop: desktopLightImg,
 	},
-	
 };
 
 export const darkTheme: Theme = {
@@ -44,6 +45,7 @@ export const darkTheme: Theme = {
 		border: '#fddee7',
 		background: 'orange',
 		blur: 'hsl(233, 14%, 35%)',
+		faint: '',
 	},
 	pictures: {
 		mobile: darkImg,
