@@ -24,7 +24,7 @@ const List = ({ inputRef }: ListProps) => {
 	const filtereditems = useMemo(() => {
 		return todos.filter(todo => {
 			switch (query) {
-				case 'pending':
+				case 'active':
 					return todo.pending;
 				case 'completed':
 					return !todo.pending;
