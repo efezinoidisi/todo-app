@@ -5,6 +5,7 @@ import { BsSun, BsMoon } from 'react-icons/bs';
 import List from './List';
 import { useTodo } from '../useTodo';
 import { MutableRefObject } from 'react';
+import { BsFillPlusSquareFill } from 'react-icons/bs';
 
 type HomeProps = {
 	toggle: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -22,6 +23,8 @@ const Home = ({ toggle, dark }: HomeProps) => {
 	// Add input from user to todo list
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
+		// do nothing when user user input is  empty
+		if (!todo) return;
 		saveTodo(todo);
 		setTodo('');
 	};
@@ -46,6 +49,9 @@ const Home = ({ toggle, dark }: HomeProps) => {
 							onChange={e => setTodo(e.target.value)}
 							ref={inputRef}
 						/>
+						<button type='submit'>
+							<BsFillPlusSquareFill className='icon' />
+						</button>
 					</FormStyle>
 				</HeaderContents>
 			</HeaderStyles>
@@ -155,5 +161,16 @@ const FormStyle = styled.form`
 		border-radius: 50%;
 		width: 1.25rem;
 		height: 1.25rem;
+	}
+
+	button {
+		background-color: inherit;
+		border: 0;
+		outline: none;
+	}
+
+	.icon {
+		color: ${({ theme }) => theme.colors.blur};
+		font-size: 2.5rem;
 	}
 `;

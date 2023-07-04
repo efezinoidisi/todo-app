@@ -14,6 +14,7 @@ interface Theme {
 		background: string;
 		blur: string;
 		faint: string;
+		btn: string;
 	};
 	pictures: {
 		mobile: string;
@@ -30,6 +31,7 @@ export const lightTheme: Theme = {
 		background: 'green',
 		blur: 'hsl(235, 19%, 35%)',
 		faint: '',
+		btn: '',
 	},
 	pictures: {
 		mobile: lightImg,
@@ -46,6 +48,7 @@ export const darkTheme: Theme = {
 		background: 'orange',
 		blur: 'hsl(233, 14%, 35%)',
 		faint: '',
+		btn: '',
 	},
 	pictures: {
 		mobile: darkImg,
