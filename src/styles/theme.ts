@@ -3,34 +3,18 @@ import lightImg from '../assets/bg-mobile-light.jpg';
 import desktopDarkImg from '../assets/bg-desktop-dark.jpg';
 
 import desktopLightImg from '../assets/bg-desktop-light.jpg';
-//import { DefaultTheme } from 'styled-components';
+import { DefaultTheme } from 'styled-components';
 
-interface Theme {
-	colors: {
-		body: string;
-		mainBg: string;
-		text: string;
-		border: string;
-		background: string;
-		blur: string;
-		faint: string;
-		btn: string;
-	};
-	pictures: {
-		mobile: string;
-		desktop: string;
-	};
-}
-
-export const lightTheme: Theme = {
+export const lightTheme: DefaultTheme = {
 	colors: {
 		body: ' hsl(236, 33%, 92%)',
 		mainBg: 'hsl(0,0%,98%)',
 		text: 'hsl(237, 14%, 26%)',
 		border: '#fff',
-		background: 'green',
+		background: 'hsl(220, 98%, 61%)',
 		blur: 'hsl(235, 19%, 35%)',
-		faint: '',
+		faint: 'hsl(236,9%,61%)',
+		listBg: '',
 		btn: '',
 	},
 	pictures: {
@@ -39,16 +23,17 @@ export const lightTheme: Theme = {
 	},
 };
 
-export const darkTheme: Theme = {
+export const darkTheme: DefaultTheme = {
 	colors: {
 		body: 'hsl(235, 21%, 11%)',
-		mainBg: 'hsl(237, 14%, 26%)',
+		mainBg: 'hsl(235, 24%, 19%)',
 		text: 'hsl(234, 39%, 85%)',
 		border: '#fddee7',
-		background: 'orange',
-		blur: 'hsl(233, 14%, 35%)',
-		faint: '',
-		btn: '',
+		background: 'hsl(220, 98%, 61%)',
+		blur: 'hsl(235, 24%, 19%)',
+		faint: 'hsl(233, 14%, 35%)',
+		btn: 'hsl(234, 11%, 52%)',
+		listBg: 'hsl(237, 14%, 26%)',
 	},
 	pictures: {
 		mobile: darkImg,

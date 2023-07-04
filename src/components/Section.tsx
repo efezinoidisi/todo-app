@@ -39,12 +39,12 @@ const DivStyles = styled.div<Props>`
 	button {
 		background-color: inherit;
 		border: none;
-		color: ${({ theme }) => theme.colors.blur};
+		color: ${({ theme }) => theme.colors.faint};
 		text-transform: capitalize;
 	}
 
 	.${props => props.active} {
-		color: hsl(220, 98%, 61%);
+		color: ${({ theme }) => theme.colors.background};
 	}
 
 	@media (min-width: 900px) {

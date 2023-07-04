@@ -63,7 +63,7 @@ const List = ({ inputRef }: ListProps) => {
 	if (todos.length === 0)
 		return (
 			<EmptyList>
-				<p>Nothing to do yet...</p>
+				<p>No todo item yet</p>
 				<button type='button' onClick={() => inputRef.current.focus()}>
 					click to add todo
 				</button>
@@ -129,7 +129,7 @@ const LastStyles = styled.div`
 	padding: 0 1rem;
 	height: 3.2rem;
 	align-items: center;
-	color: ${({ theme }) => theme.colors.blur};
+	color: ${({ theme }) => theme.colors.faint};
 
 	button {
 		background-color: inherit;
@@ -137,7 +137,7 @@ const LastStyles = styled.div`
 	}
 
 	.button {
-		color: ${({ theme }) => theme.colors.blur};
+		color: ${({ theme }) => theme.colors.faint};
 	}
 
 	div {
@@ -170,7 +170,7 @@ const DisplayStyles = styled.div`
 
 const ItemWrap = styled.div`
 	padding: 0 1rem;
-	border-bottom: 1px solid ${({ theme }) => theme.colors.blur};
+	border-bottom: 1px solid ${({ theme }) => theme.colors.faint};
 `;
 
 const EmptyList = styled.div`

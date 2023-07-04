@@ -9,6 +9,9 @@ declare module 'styled-components' {
 			border: string;
 			background: string;
 			blur: string;
+			faint: string;
+			listBg: string;
+			btn: string;
 		};
 		pictures: {
 			mobile: string;

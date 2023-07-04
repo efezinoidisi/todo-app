@@ -13,7 +13,7 @@ type HomeProps = {
 };
 
 const Home = ({ toggle, dark }: HomeProps) => {
-	const { saveTodo } = useTodo() as TodoContextType;
+	const { saveTodo, todos } = useTodo() as TodoContextType;
 
 	const inputRef = useRef() as MutableRefObject<HTMLInputElement>;
 
@@ -58,7 +58,9 @@ const Home = ({ toggle, dark }: HomeProps) => {
 
 			<MainStyles>
 				<List inputRef={inputRef} />
-				<p className='drag'>Drag and drop to reorder list</p>
+				{todos.length > 0 && (
+					<p className='drag'>Drag and drop to reorder list</p>
+				)}
 			</MainStyles>
 		</>
 	);
@@ -135,7 +137,7 @@ const MainStyles = styled.main`
 	.drag {
 		padding-block: 3rem;
 		text-align: center;
-		color: ${({ theme }) => theme.colors.blur};
+		color: ${({ theme }) => theme.colors.faint};
 	}
 
 	@media only screen and (min-width: 600px) {
@@ -157,7 +159,7 @@ const FormStyle = styled.form`
 	padding-inline: 0.9rem;
 
 	span {
-		border: 1px solid ${({ theme }) => theme.colors.blur};
+		border: 1px solid ${({ theme }) => theme.colors.faint};
 		border-radius: 50%;
 		width: 1.25rem;
 		height: 1.25rem;
@@ -170,7 +172,7 @@ const FormStyle = styled.form`
 	}
 
 	.icon {
-		color: ${({ theme }) => theme.colors.blur};
+		color: ${({ theme }) => theme.colors.faint};
 		font-size: 2.5rem;
 	}
 `;

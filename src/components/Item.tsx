@@ -72,7 +72,7 @@ const Checkbox = styled.span`
 		-moz-appearance: none;
 		width: 1.25rem;
 		height: 1.25rem;
-		border: 0.125rem solid ${({ theme }) => theme.colors.blur};
+		border: 1px solid ${({ theme }) => theme.colors.faint};
 		border-radius: 50%;
 		outline: none;
 		cursor: pointer;

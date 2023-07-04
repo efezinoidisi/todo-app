@@ -56,26 +56,11 @@ Add a screenshot of your solution. The easiest way to do this is to use Firefox 
 
 ### What I learned
 
-I started learning TypeScript while working on this challenge and it wasn't fun at first but I've come to love it now.
+- Typescript
+- Drag and drop with react beautiful dnd
 
-I also learned about adding drag and drop using react beautiful dnd.
+```ts
 
-To see how you can add code snippets, see below:
-
-```html
-<h1>Some HTML code I'm proud of</h1>
-```
-
-```css
-.proud-of-this-css {
-	color: papayawhip;
-}
-```
-
-```js
-const proudOfThisFunc = () => {
-	console.log('🎉');
-};
 ```
 
 ### Continued development
