@@ -6,21 +6,21 @@ import Home from './components/Home';
 import { TodosProvider } from './TodoContext';
 
 function App() {
-	const [theme, setTheme] = useState('dark');
-	const toggleTheme = () => {
-		theme === 'theme' ? setTheme('light') : setTheme('dark');
-	};
+  const [theme, setTheme] = useState('dark');
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
-	return (
-		<TodosProvider>
-			<ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
-				<GlobalStyles />
-				<div className='App'>
-					<Home toggle={toggleTheme} theme={theme} />
-				</div>
-			</ThemeProvider>
-		</TodosProvider>
-	);
+  return (
+    <TodosProvider>
+      <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
+        <GlobalStyles />
+        <div className='App'>
+          <Home toggle={toggleTheme} theme={theme} />
+        </div>
+      </ThemeProvider>
+    </TodosProvider>
+  );
 }
 
 export default App;

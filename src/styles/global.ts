@@ -18,6 +18,7 @@ export default createGlobalStyle`
     color : ${({ theme }) => theme.colors.text};
     height: 100dvh;
     padding-bottom: 3rem;
+    font-family: 'Josefin Sans', sans-serif;
   }
     
   button{
