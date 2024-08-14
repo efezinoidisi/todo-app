@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import close from '../assets/icon-cross.svg';
 import icon from '../assets/icon-check.svg';
+import close from '../assets/icon-cross.svg';
 
 type itemProps = {
   id: string;
@@ -12,7 +12,7 @@ type itemProps = {
 
 const Item = ({ id, pending, title, updateTodo, deleteTodo }: itemProps) => {
   return (
-    <ItemsStyles pending={pending}>
+    <ItemsStyles $pending={pending}>
       <Checkbox>
         <input
           type='checkbox'
@@ -36,17 +36,17 @@ const Item = ({ id, pending, title, updateTodo, deleteTodo }: itemProps) => {
 
 export default Item;
 
-const ItemsStyles = styled.div.attrs((props: { pending: boolean }) => props)`
+const ItemsStyles = styled.div<{ $pending?: boolean }>`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 0;
-  height: 3.2rem;
+  padding-block: 1rem;
+  min-height: 3.2rem;
   gap: 1rem;
   font-size: 1rem;
 
   cursor: pointer;
-  text-decoration: ${({ pending }) => (pending ? 'none' : 'line-through')};
+  text-decoration: ${({ $pending }) => ($pending ? 'none' : 'line-through')};
   text-decoration-thickness: 0.1rem;
 
   p {

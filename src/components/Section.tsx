@@ -5,15 +5,11 @@ type SectionProps = {
   query: string;
 };
 
-type Props = {
-  active: string;
-};
-
 const Section = ({ views, query }: SectionProps) => {
   const allViews = ['all', 'active', 'completed'];
   return (
-    <DivStyles active={query}>
-      {allViews.map(item => (
+    <DivStyles $active={query}>
+      {allViews.map((item) => (
         <button
           key={item}
           onClick={() => {
@@ -30,7 +26,7 @@ const Section = ({ views, query }: SectionProps) => {
 
 export default Section;
 
-const DivStyles = styled.div<Props>`
+const DivStyles = styled.section<{ $active: string }>`
   width: 50%;
   margin: 0 auto;
   display: flex;
@@ -43,7 +39,7 @@ const DivStyles = styled.div<Props>`
     text-transform: capitalize;
   }
 
-  .${props => props.active} {
+  .${({ $active }) => $active} {
     color: ${({ theme }) => theme.colors.background};
   }
 

@@ -1,11 +1,9 @@
-import { TodoContextType } from '../todoTypes';
-import { useState, useRef } from 'react';
+import { MutableRefObject, useRef, useState } from 'react';
+import { BsFillPlusSquareFill, BsMoon, BsSun } from 'react-icons/bs';
 import styled from 'styled-components';
-import { BsSun, BsMoon } from 'react-icons/bs';
-import List from './List';
+import { TodoContextType } from '../todoTypes';
 import { useTodo } from '../useTodo';
-import { MutableRefObject } from 'react';
-import { BsFillPlusSquareFill } from 'react-icons/bs';
+import List from './List';
 
 type HomeProps = {
   toggle: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -46,10 +44,10 @@ const Home = ({ toggle, theme }: HomeProps) => {
               name='add-todo'
               placeholder='Create a new todo...'
               value={todo}
-              onChange={e => setTodo(e.target.value)}
+              onChange={(e) => setTodo(e.target.value)}
               ref={inputRef}
             />
-            <button type='submit'>
+            <button type='submit' aria-label='new todo'>
               <BsFillPlusSquareFill className='icon' />
             </button>
           </FormStyle>

@@ -1,15 +1,15 @@
-import styled from 'styled-components';
-import { useState, useMemo, MutableRefObject } from 'react';
-import Item from './Item';
-import { TodoContextType } from '../todoTypes';
 import {
   DragDropContext,
+  Draggable,
   DropResult,
   Droppable,
-  Draggable,
-} from 'react-beautiful-dnd';
-import Section from './Section';
+} from '@hello-pangea/dnd';
+import { MutableRefObject, useMemo, useState } from 'react';
+import styled from 'styled-components';
+import { TodoContextType } from '../todoTypes';
 import { useTodo } from '../useTodo';
+import Item from './Item';
+import Section from './Section';
 
 type ListProps = {
   inputRef: MutableRefObject<HTMLInputElement>;
@@ -22,7 +22,7 @@ const List = ({ inputRef }: ListProps) => {
   const [query, setQuery] = useState<string>('all');
 
   const filtereditems = useMemo(() => {
-    return todos.filter(todo => {
+    return todos.filter((todo) => {
       switch (query) {
         case 'active':
           return todo.pending;
@@ -35,7 +35,7 @@ const List = ({ inputRef }: ListProps) => {
   }, [query, todos]);
 
   // get number of todos still pending
-  const itemsLeft = todos.filter(todo => todo.pending).length;
+  const itemsLeft = todos.filter((todo) => todo.pending).length;
 
   // handle reordering of todo list on drag and drop
   const handleOnDragEnd = (results: DropResult) => {
@@ -74,11 +74,11 @@ const List = ({ inputRef }: ListProps) => {
     <>
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <Droppable droppableId='todos' type='group'>
-          {provided => (
+          {(provided) => (
             <ListStyles {...provided.droppableProps} ref={provided.innerRef}>
               {filtereditems.map((todo, index) => (
                 <Draggable key={todo.id} draggableId={todo.id} index={index}>
-                  {provided => (
+                  {(provided) => (
                     <ItemWrap
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
@@ -96,8 +96,9 @@ const List = ({ inputRef }: ListProps) => {
               {provided.placeholder}
 
               <LastStyles>
-                <span>{`${itemsLeft} item${itemsLeft > 1 ? 's' : ''
-                  } left`}</span>
+                <span>{`${itemsLeft} item${
+                  itemsLeft > 1 ? 's' : ''
+                } left`}</span>
                 <Section views={setQuery} query={query} />
                 <button onClick={clearCompleted} className='button'>
                   Clear completed
@@ -139,12 +140,12 @@ const LastStyles = styled.div`
     color: ${({ theme }) => theme.colors.faint};
   }
 
-  div {
+  section {
     display: none;
   }
 
   @media screen and (min-width: 900px) {
-    div {
+    section {
       display: flex;
     }
   }
